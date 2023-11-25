@@ -1,0 +1,36 @@
+# HTML
+# Archive your static HTML project and save it with the build record.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  name: YourSelfHostedAgentPoolName
+
+jobs:
+- job: BuildAndDeploy
+  displayName: 'Build and Deploy Job'
+  pool:
+    name: Default
+
+  steps:
+  - checkout: self
+
+  - script: |
+      # Create a directory for deployment
+      mkdir deploy
+
+      # Copy HTML and CSS files to the deployment directory
+      cp index.html deploy/
+      cp style.css deploy/
+    displayName: 'Copy HTML and CSS'
+
+  # Add any additional deployment steps here if needed
+
+  - task: PublishPipelineArtifact@1
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)'
+      artifact: 'deploy'
+    displayName: 'Publish Artifacts'
